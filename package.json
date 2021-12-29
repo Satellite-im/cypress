@@ -1,0 +1,12 @@
+{
+  "name": "cypress",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/Satellite-im/cypress.git",
+  "author": "Sara Tavares <29093946+stavares843@users.noreply.github.com>",
+  "license": "MIT",
+  "dependencies": {
+    "cypress-file-upload": "^5.0.8",
+    "faker": "^5.5.3"
+  }
+}
