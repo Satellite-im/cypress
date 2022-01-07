@@ -8,5 +8,8 @@
   "dependencies": {
     "cypress-file-upload": "^5.0.8",
     "faker": "^5.5.3"
+  },
+  "devDependencies": {
+    "cypress-localstorage-commands": "^1.6.1"
   }
 }
