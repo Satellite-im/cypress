@@ -1,3 +1,6 @@
+import 'cypress-file-upload'
+import 'cypress-localstorage-commands'
+
 const faker = require('faker')
 const randomName = faker.internet.userName(name) // generate random name
 const randomStatus = faker.lorem.word() // generate random status
@@ -56,6 +59,3 @@ Cypress.Commands.add('importAccount', () => {
     'be.visible',
   )
 })
-
-import 'cypress-file-upload'
-import 'cypress-localstorage-commands'
