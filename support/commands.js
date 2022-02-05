@@ -55,7 +55,4 @@ Cypress.Commands.add('importAccount', () => {
   cy.get('[data-cy=add-passphrase]').type('{enter}')
   cy.contains('Recover Account').click()
   Cypress.on('uncaught:exception', (err, runnable) => false) // temporary until AP-48 gets fixed
-  cy.contains('Working on the space station', { timeout: 60000 }).should(
-    'be.visible',
-  )
 })
