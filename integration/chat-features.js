@@ -6,6 +6,7 @@ const textToPaste = 'copy paste stuff'
 
 it('Chat - Send stuff on chat', () => {
   cy.importAccount()
+  cy.contains('aaaaa', { timeout: 60000 }).should('be.visible')
   cy.contains('aaaaa').click() // clicks on user name
   cy.get('.messageuser').type(randomMessage)
   cy.get('.messageuser').type('{enter}') // sending text message
