@@ -10,6 +10,9 @@
     "faker": "^5.5.3"
   },
   "devDependencies": {
-    "cypress-localstorage-commands": "^1.6.1"
+    "@commitlint/cli": "^16.2.1",
+    "@commitlint/config-conventional": "^16.2.1",
+    "cypress-localstorage-commands": "^1.6.1",
+    "husky": "^7.0.4"
   }
 }
