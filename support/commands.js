@@ -33,12 +33,12 @@ Cypress.Commands.add('createAccount', () => {
   cy.get('[data-cy=submit-input]').click()
   cy.get('.is-primary > #custom-cursor-area').click()
   cy.get('.switch-button').each(($btn, index, $List) => {
-      if ($btn.hasClass("enabled")) {
-          cy.wrap($btn).click().should('not.have.class', 'enabled')
-      } else {
-          cy.wrap($btn).click().should('have.class', 'enabled')
-        }
-    })
+    if ($btn.hasClass('enabled')) {
+      cy.wrap($btn).click().should('not.have.class', 'enabled')
+    } else {
+      cy.wrap($btn).click().should('have.class', 'enabled')
+    }
+  })
   cy.get('#custom-cursor-area').click()
   cy.get('.title').should('contain', 'Recovery Seed')
   cy.contains('Continue').click()
