@@ -34,8 +34,16 @@ it('Create Account', () => {
   cy.contains(
     'Allow Satellite to fetch data from external sites in order to expand links like Spotify, YouTube, and more.',
   )
-  cy.contains('Continue').click()
-  cy.contains('I Saved It').click()
+  cy.get('.switch-button').each(($btn, index, $List) => {
+    if ($btn.hasClass('enabled')) {
+      cy.wrap($btn).click().should('not.have.class', 'enabled')
+    } else {
+      cy.wrap($btn).click().should('have.class', 'enabled')
+    }
+  })
+  cy.get('#custom-cursor-area').click()
+  cy.get('.title').should('contain', 'Recovery Seed')
+  cy.get('#custom-cursor-area').click()
   cy.contains('Customize how the world sees you, choose something memorable.', {
     timeout: 5000,
   }).should('be.visible')
