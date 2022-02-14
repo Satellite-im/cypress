@@ -1,4 +1,4 @@
-describe("Test Suite for Login to Satellite.IM Site", () => {
+describe("Test Suite for Login to Satellite.IM Site - Luis first task", () => {
     before(() => {
         cy.visit("https://dev.satellite.one/") // baseURL should be setup in cypress.json
         // First command - Create PIN (sending the PIN value as a parameter)
