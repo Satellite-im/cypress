@@ -68,7 +68,7 @@ it('Create account with non-NSFW after attempting to load a NSFW image', () => {
   //Attempting to add NSFW image and validating error message is displayed
   const filepathNsfw = 'images/negative-create-account-test.png'
   cy.accountCreationAddImage(filepathNsfw)
-  cy.get('.red', { timeout: 10000 }).should(
+  cy.get('.red', { timeout: 30000 }).should(
     'have.text',
     'Unable to upload file/s due to NSFW status',
   )
@@ -79,4 +79,25 @@ it('Create account with non-NSFW after attempting to load a NSFW image', () => {
   cy.get('.red').should('not.exist')
   cy.get('[data-cy=sign-in-button]').click()
   cy.contains('Linking Satellites...')
+})
+
+it('Create account successfully without image after attempting to add a NSFW picture', () => {
+  //Creating pin, clicking on buttons to continue to user data screen
+  cy.accountCreationFirstSteps()
+  //Adding random data in user input fields
+  cy.accountCreationFillRandomData()
+  //Attempting to add NSFW image and validating error message is displayed
+  const filepathNsfw = 'images/negative-create-account-test.png'
+  cy.accountCreationAddImage(filepathNsfw)
+  cy.get('.red', { timeout: 30000 }).should(
+    'have.text',
+    'Unable to upload file/s due to NSFW status',
+  )
+  //User is still able to sign in and NSFW image will not be loaded
+  cy.get('[data-cy=sign-in-button]').click()
+  cy.contains('Linking Satellites...')
+  //Validating profile picture is null and default satellite circle is displayed
+  cy.get('.user-state > .is-rounded > .satellite-circle', {
+    timeout: 40000,
+  }).should('exist')
 })
