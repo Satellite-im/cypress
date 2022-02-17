@@ -55,22 +55,12 @@ it('Create Account', () => {
   cy.get('[data-cy=status-input]').type(randomStatus)
   cy.get('.is-outlined > #custom-cursor-area').click()
   cy.get('.input-file').attachFile(filepathCorrect)
-  cy.contains('Crop').click()
+  cy.contains('Crop', { timeout: 20000 }).click()
   cy.get('[data-cy=sign-in-button]').click()
   cy.contains('Linking Satellites...')
 })
 
 it('Create account with non-NSFW after attempting to load a NSFW image', () => {
-  /*
-  user signs up
-  goes to the sign up add image section
-  adds a NSFW image
-  returns error
-  uploads a non-NSFW image
-  works fine
-  user is able to sign up 
-  assert user was able to sign up
-  */
   //Creating pin, clicking on buttons to continue to user data screen
   cy.accountCreationFirstSteps()
   //Adding random data in user input fields
