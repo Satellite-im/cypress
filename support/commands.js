@@ -27,6 +27,8 @@ for (const command of [
   })
 }
 
+//Create account commands
+
 Cypress.Commands.add('createAccount', () => {
   cy.visit('/')
   cy.get('[data-cy=add-input]').type('test001', { log: false })
@@ -48,6 +50,28 @@ Cypress.Commands.add('createAccount', () => {
   cy.get('[data-cy=status-input]').type(randomStatus)
   cy.get('[data-cy=sign-in-button]').click()
 })
+
+Cypress.Commands.add('accountCreationFirstSteps', () => {
+  cy.visit('/')
+  cy.get('[data-cy=add-input]').type('test001', { log: false })
+  cy.get('[data-cy=submit-input]').click()
+  cy.get('.is-primary > #custom-cursor-area').click()
+  cy.contains('Continue').click()
+  cy.contains('I Saved It').click()
+  Cypress.on('uncaught:exception', (err, runnable) => false) // temporary until AP-48 gets fixed
+})
+
+Cypress.Commands.add('accountCreationFillRandomData', () => {
+  cy.get('[data-cy=username-input]').type(randomName)
+  cy.get('[data-cy=status-input]').type(randomStatus)
+})
+
+Cypress.Commands.add('accountCreationAddImage', (filepath) => {
+  cy.get('.is-outlined > #custom-cursor-area').click()
+  cy.get('.input-file').attachFile(filepath)
+})
+
+//Import account commands
 
 Cypress.Commands.add('importAccount', () => {
   cy.visit('/')
