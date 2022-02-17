@@ -2,6 +2,7 @@ const faker = require('faker')
 const randomName = faker.internet.userName(name) // generate random name
 const randomStatus = faker.lorem.word() // generate random status
 const filepathCorrect = 'images/logo.png'
+const filepathNsfw = 'images/negative-create-account-test.png'
 
 it('Create Account', () => {
   cy.visit('/')
@@ -66,14 +67,12 @@ it('Create account with non-NSFW after attempting to load a NSFW image', () => {
   //Adding random data in user input fields
   cy.accountCreationFillRandomData()
   //Attempting to add NSFW image and validating error message is displayed
-  const filepathNsfw = 'images/negative-create-account-test.png'
   cy.accountCreationAddImage(filepathNsfw)
   cy.get('.red', { timeout: 30000 }).should(
     'have.text',
     'Unable to upload file/s due to NSFW status',
   )
   //Now adding a non-NSFW image and validating user can pass to next step
-  const filepath = 'images/negative-create-account-test.png'
   cy.accountCreationAddImage(filepathCorrect)
   cy.contains('Crop', { timeout: 10000 }).click()
   cy.get('.red').should('not.exist')
@@ -87,7 +86,6 @@ it('Create account successfully without image after attempting to add a NSFW pic
   //Adding random data in user input fields
   cy.accountCreationFillRandomData()
   //Attempting to add NSFW image and validating error message is displayed
-  const filepathNsfw = 'images/negative-create-account-test.png'
   cy.accountCreationAddImage(filepathNsfw)
   cy.get('.red', { timeout: 30000 }).should(
     'have.text',
