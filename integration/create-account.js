@@ -1,6 +1,7 @@
 const faker = require('faker')
 const randomName = faker.internet.userName(name) // generate random name
 const randomStatus = faker.lorem.word() // generate random status
+const filepathCorrect = 'images/logo.png'
 
 it('Create Account', () => {
   cy.visit('/')
@@ -45,17 +46,47 @@ it('Create Account', () => {
   cy.get('.title').should('contain', 'Recovery Seed')
   cy.get('#custom-cursor-area').click()
   cy.contains('Customize how the world sees you, choose something memorable.', {
-    timeout: 5000,
+    timeout: 10000,
   }).should('be.visible')
   cy.contains('Username')
   Cypress.on('uncaught:exception', (err, runnable) => false) // temporary until AP-48 gets fixed
   cy.get('[data-cy=username-input]').type(randomName)
   cy.contains('Status')
   cy.get('[data-cy=status-input]').type(randomStatus)
-  const filepath = 'images/logo.png'
   cy.get('.is-outlined > #custom-cursor-area').click()
-  cy.get('.input-file').attachFile(filepath)
+  cy.get('.input-file').attachFile(filepathCorrect)
   cy.contains('Crop').click()
+  cy.get('[data-cy=sign-in-button]').click()
+  cy.contains('Linking Satellites...')
+})
+
+it('Create account with non-NSFW after attempting to load a NSFW image', () => {
+  /*
+  user signs up
+  goes to the sign up add image section
+  adds a NSFW image
+  returns error
+  uploads a non-NSFW image
+  works fine
+  user is able to sign up 
+  assert user was able to sign up
+  */
+  //Creating pin, clicking on buttons to continue to user data screen
+  cy.accountCreationFirstSteps()
+  //Adding random data in user input fields
+  cy.accountCreationFillRandomData()
+  //Attempting to add NSFW image and validating error message is displayed
+  const filepathNsfw = 'images/negative-create-account-test.png'
+  cy.accountCreationAddImage(filepathNsfw)
+  cy.get('.red', { timeout: 10000 }).should(
+    'have.text',
+    'Unable to upload file/s due to NSFW status',
+  )
+  //Now adding a non-NSFW image and validating user can pass to next step
+  const filepath = 'images/negative-create-account-test.png'
+  cy.accountCreationAddImage(filepathCorrect)
+  cy.contains('Crop', { timeout: 10000 }).click()
+  cy.get('.red').should('not.exist')
   cy.get('[data-cy=sign-in-button]').click()
   cy.contains('Linking Satellites...')
 })
