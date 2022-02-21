@@ -8,9 +8,11 @@ let toggleStatusProfile = []
 before(() => {
   //Adding pin to continue to toggles switches screen
   cy.visit('/')
-  cy.get('[data-cy=add-input]').type('test001', { log: false })
-  cy.get('[data-cy=submit-input]').click()
-  cy.get('.is-primary > #custom-cursor-area').click()
+  //Enter PIN screen
+  cy.createAccountPINscreen('test001')
+
+  //Create or Import account selection screen
+  cy.createAccountSecondScreen()
 })
 
 /* Commenting code below because tests will fail due to bug AP-795 
@@ -53,15 +55,15 @@ it('Privacy page - Verify all toggles switches work as should', () => {
 it('Privacy page - Verify user can still proceed after adjusting switches', () => {
   //Going to Recovery Seed screen and clicking on button to go to next screen
   cy.get('#custom-cursor-area').click()
-  cy.get('.title').should('contain', 'Recovery Seed')
-  cy.contains('I Saved It').click()
-  Cypress.on('uncaught:exception', (err, runnable) => false) // temporary until AP-48 gets fixed
-  //Adding random data for user inputs and click on button to continue
-  cy.get('[data-cy=username-input]').type(randomName)
-  cy.get('[data-cy=status-input]').type(randomStatus)
-  cy.get('[data-cy=sign-in-button]').click()
-  //Validating buffering screen text and that user is redirected to friends/list
-  cy.contains('Linking Satellites...')
+
+  //Recovery Seed Screen
+  cy.createAccountRecoverySeed()
+
+  //Username and Status Input
+  cy.createAccountUserInput(randomName, randomStatus)
+
+  //Click on button, validate buffering screen and that user is redirected to friends/list
+  cy.createAccountSubmit()
   cy.url({ timeout: 30000 }).should('contain', 'friends/list')
 })
 

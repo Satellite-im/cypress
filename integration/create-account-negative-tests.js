@@ -4,30 +4,52 @@ const randomStatus = faker.lorem.word() // generate random status
 
 it('Try to create account with PIN less than 5 digits', () => {
   cy.visit('/')
-  cy.contains('Create Account Pin')
-  cy.get('[data-cy=add-input]').type('1')
-  cy.get('[data-cy=submit-input]').click()
-  cy.contains('Pin must be at least 5 characters.')
-  cy.reload()
-  cy.get('[data-cy=submit-input]').click()
+  //Enter PIN screen and add an invalid pin
+  cy.createAccountPINscreen('1')
+
+  //Error message will be displayed
   cy.contains('Pin must be at least 5 characters.')
 })
 
 it('Try to create account without username', () => {
-  //Creating pin, clicking on buttons to continue to user data screen
-  cy.accountCreationFirstSteps()
+  //Enter PIN screen
+  cy.visit('/')
+  cy.createAccountPINscreen('test001')
+
+  //Create or Import account selection screen
+  cy.createAccountSecondScreen()
+
+  //Privacy Settings screen
+  cy.createAccountPrivacyToggles()
+
+  //Recovery Seed Screen
+  cy.createAccountRecoverySeed()
+
+  //Clicking without adding a username will throw an error message
   cy.get('[data-cy=sign-in-button]').click()
   cy.contains('Username must be at least 5 characters.')
 })
 
 it('Try to create account with NSFW image', () => {
-  //Creating pin, clicking on buttons to continue to user data screen
-  cy.accountCreationFirstSteps()
-  //Adding random data in user input fields
-  cy.accountCreationFillRandomData()
+  cy.visit('/')
+  //Enter PIN screen
+  cy.createAccountPINscreen('test001')
+
+  //Create or Import account selection screen
+  cy.createAccountSecondScreen()
+
+  //Privacy Settings screen
+  cy.createAccountPrivacyToggles()
+
+  //Recovery Seed Screen
+  cy.createAccountRecoverySeed()
+
+  //Username and Status Input
+  cy.createAccountUserInput(randomName, randomStatus)
+
   //Attempting to add NSFW image and validating error message is displayed
-  const filepath = 'images/negative-create-account-test.png'
-  cy.accountCreationAddImage(filepath)
+  const filepathNsfw = 'images/negative-create-account-test.png'
+  cy.createAccountAddImage(filepathNsfw)
   cy.get('.red', { timeout: 10000 }).should(
     'have.text',
     'Unable to upload file/s due to NSFW status',
