@@ -191,3 +191,27 @@ Cypress.Commands.add('releaseNotesScreenValidation', () => {
   cy.contains('is Here!').should('be.visible')
   cy.contains('Got It!').should('be.visible').click()
 })
+
+//Snapshot Testing
+
+Cypress.Commands.add('snapshotTestContains', (text, timeout = 4000) => {
+  cy.contains(text, { timeout: timeout })
+    .should('be.visible')
+    .then(() => {
+      cy.document().toMatchImageSnapshot()
+    })
+})
+
+Cypress.Commands.add('snapshotTestGet', (locator, text, timeout = 4000) => {
+  cy.get(locator, { timeout: timeout })
+    .should('contain', text)
+    .then(() => {
+      cy.document().toMatchImageSnapshot()
+    })
+})
+
+//Settings Menu
+
+Cypress.Commands.add('openSettingsMenuOption', (option) => {
+  cy.get('.menu-list').contains(option).click()
+})
