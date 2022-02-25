@@ -215,3 +215,12 @@ Cypress.Commands.add('snapshotTestGet', (locator, text, timeout = 4000) => {
 Cypress.Commands.add('openSettingsMenuOption', (option) => {
   cy.get('.menu-list').contains(option).click()
 })
+
+// LocalStorage Validations
+
+Cypress.Commands.add('validatePassphraseLocalStorage', () => {
+  cy.getLocalStorage('Satellite-Store').then((value) => {
+    let valueObject = JSON.parse(value)
+    expect(valueObject.accounts.phrase).to.eq('')
+  })
+})
