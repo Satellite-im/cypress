@@ -2,7 +2,7 @@ const faker = require('faker')
 const randomName = faker.internet.userName(name) // generate random name
 const randomStatus = faker.lorem.word() // generate random status
 const recoverySeed =
-  'diet acquire phone casino sister scatter news notable sustain lift mercy right'
+  'black blossom pink damage together artwork coil west clown turn chimney physical'
 
 describe('Snapshots Testing', () => {
   it('Import account', () => {
@@ -35,8 +35,8 @@ describe('Snapshots Testing', () => {
     Cypress.on('uncaught:exception', (err, runnable) => false) // temporary until AP-48 gets fixed
 
     //Snapshots on buffering screen and main screen
-    cy.snapshotTestContains('Linking Satellites...', 20000)
-    cy.snapshotTestContains('SnapQA', 30000)
+    cy.snapshotTestContains('Linking Satellites...', 60000)
+    cy.snapshotTestContains('SnapQA', 60000)
 
     // Go to files
     cy.get('.sidebar-nav > .is-dark > #custom-cursor-area').click()
@@ -72,11 +72,12 @@ describe('Snapshots Testing', () => {
 
     // Go to Settings - General - Profile
     cy.openSettingsMenuOption('Profile')
-    cy.snapshotTestContains('Account Info')
+    cy.get('.title').should('contain', 'Profile')
+    cy.snapshotTestContains('Profile')
 
     // Go to Settings - General - Audio & Video
     cy.openSettingsMenuOption('Audio & Video')
-    cy.snapshotTestContains('Audio Input')
+    cy.snapshotTestContains('Audio Sources')
 
     // Go to Settings - General - Keybinds
     cy.openSettingsMenuOption('Keybinds')
@@ -105,10 +106,6 @@ describe('Snapshots Testing', () => {
     cy.openSettingsMenuOption('Network')
     cy.get('.column > .title').should('contain', 'Network')
     cy.snapshotTestContains('Network')
-
-    // Go to Settings - Developer - Notifications
-    cy.openSettingsMenuOption('Notifications')
-    cy.snapshotTestContains('Notifications Settings')
 
     // Go to Settings - Developer - App Info
     cy.openSettingsMenuOption('App Info')
