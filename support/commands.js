@@ -51,7 +51,7 @@ Cypress.Commands.add('createAccount', () => {
   cy.get('[data-cy=sign-in-button]').click()
 })
 
-Cypress.Commands.add('createAccountPINscreen', (pin) => {
+Cypress.Commands.add('createAccountPINscreen', (pin, savePin = false) => {
   cy.url().should('contains', '/#/auth/unlock')
   cy.contains('Create Account Pin').should('be.visible')
   cy.contains("The pin can be anything you want, just don't forget it.").should(
@@ -60,6 +60,11 @@ Cypress.Commands.add('createAccountPINscreen', (pin) => {
   cy.contains('Choose Your Pin').should('be.visible')
   cy.get('[data-cy=add-input]').should('be.visible').type(pin, { log: false })
   cy.contains('Store Pin? (Less Secure)').should('be.visible')
+  if (savePin === true) {
+    cy.get('.switch-button').click().should('have.class', 'enabled')
+  } else {
+    cy.get('.switch-button').should('not.have.class', 'enabled')
+  }
   cy.get('[data-cy=submit-input]').should('be.visible').click()
 })
 
@@ -99,6 +104,11 @@ Cypress.Commands.add('createAccountPrivacyToggles', () => {
         cy.wrap($btn).click().should('have.class', 'enabled')
       }
     })
+  cy.get('#custom-cursor-area').should('be.visible').click()
+})
+
+Cypress.Commands.add('createAccountPrivacyTogglesGoNext', () => {
+  cy.contains('Privacy Settings').should('be.visible')
   cy.get('#custom-cursor-area').should('be.visible').click()
 })
 
@@ -145,6 +155,29 @@ Cypress.Commands.add('importAccount', () => {
       'boring over tilt regret diamond rubber example there fire roof sheriff always',
       { log: false },
     )
+  cy.get('[data-cy=add-passphrase]').type('{enter}')
+  cy.contains('Recover Account').should('be.visible').click()
+  Cypress.on('uncaught:exception', (err, runnable) => false) // temporary until AP-48 gets fixed
+})
+
+Cypress.Commands.add('importAccountPINscreen', (pin, savePin = false) => {
+  cy.get('[data-cy=add-input]').should('be.visible').type(pin, { log: false })
+  if (savePin === true) {
+    cy.get('.switch-button').click().should('have.class', 'enabled')
+  } else {
+    cy.get('.switch-button').should('not.have.class', 'enabled')
+  }
+  cy.get('[data-cy=submit-input]').should('be.visible').click()
+})
+
+Cypress.Commands.add('importAccountEnterPassphrase', (userPassphrase) => {
+  cy.contains('Import Account').should('be.visible').click()
+  cy.contains(
+    'Enter your 12 word passphrase in exactly the same order your recovery seed was generated.',
+  ).should('be.visible')
+  cy.get('[data-cy=add-passphrase]')
+    .should('be.visible')
+    .type(userPassphrase, { log: false })
   cy.get('[data-cy=add-passphrase]').type('{enter}')
   cy.contains('Recover Account').should('be.visible').click()
   Cypress.on('uncaught:exception', (err, runnable) => false) // temporary until AP-48 gets fixed
