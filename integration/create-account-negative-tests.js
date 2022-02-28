@@ -50,7 +50,7 @@ it('Try to create account with NSFW image', () => {
   //Attempting to add NSFW image and validating error message is displayed
   const filepathNsfw = 'images/negative-create-account-test.png'
   cy.createAccountAddImage(filepathNsfw)
-  cy.get('.red', { timeout: 10000 }).should(
+  cy.get('.red', { timeout: 20000 }).should(
     'have.text',
     'Unable to upload file/s due to NSFW status',
   )

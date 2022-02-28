@@ -20,7 +20,7 @@ describe('Chat Features Tests', () => {
     cy.chatFeaturesEditMessage(randomMessage, randomNumber)
   })
 
-  it('Chat - Verify when clicking on Send Money a quick paypments pop-up appears', () => {
+  it('Chat - Verify when clicking on Send Money, coming soon appears', () => {
     //Hover over on Send Money and Coming Soon tooltip will appear when clicking on its button
     cy.get('#chatbar-controls > span > .tooltip-container')
       .realHover()
