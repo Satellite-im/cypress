@@ -14,6 +14,7 @@
     "@commitlint/config-conventional": "^16.2.1",
     "cypress-localstorage-commands": "^1.6.1",
     "cypress-plugin-snapshots": "^1.4.4",
+    "cypress-real-events": "^1.7.0",
     "husky": "^7.0.0",
     "pretty-quick": "^3.1.3"
   },
