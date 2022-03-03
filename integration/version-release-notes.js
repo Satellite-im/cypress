@@ -1,4 +1,7 @@
-it('Release notes appear when clicking on version number', () => {
-  cy.visit('/')
-  cy.releaseNotesScreenValidation()
+describe('Version Release Notes Tests', () => {
+  it('Release notes appear when clicking on version number', () => {
+    cy.visit('/').then(() => {
+      cy.releaseNotesScreenValidation()
+    })
+  })
 })

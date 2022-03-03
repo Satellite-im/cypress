@@ -1,10 +1,12 @@
 const faker = require('faker')
+const randomPIN = faker.internet.password(7, false, /[A-Z]/, 'test') // generate random PIN
 const randomNumber = faker.datatype.number() // generate random number
 const randomMessage = faker.lorem.sentence() // generate random sentence
 
 describe('Chat Features Tests', () => {
   it('Chat - Send stuff on chat', () => {
-    cy.importAccount()
+    //Import account
+    cy.importAccount(randomPIN)
 
     //Validate profile name displayed
     cy.chatFeaturesProfileName('sadad')
