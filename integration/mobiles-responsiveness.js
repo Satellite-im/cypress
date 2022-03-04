@@ -1,6 +1,7 @@
 import { data } from '../fixtures/mobile-devices.json'
 
 const faker = require('faker')
+const randomPIN = faker.internet.password(7, false, /[A-Z]/, 'test') // generate random PIN
 const randomName = faker.internet.userName(name) // generate random name
 const randomStatus = faker.lorem.word() // generate random status
 const filepathCorrect = 'images/logo.png'
@@ -10,18 +11,14 @@ const randomMessage = faker.lorem.sentence() // generate random sentence
 describe('Run responsiveness tests on several devices', () => {
   data.allDevices.forEach((item) => {
     it(`Create Account on ${item.description}`, () => {
-      //Visiting main page and changing viewport
-      cy.visit('/')
       cy.viewport(item.width, item.height)
-
-      //Enter PIN screen
-      cy.createAccountPINscreen('test001')
+      cy.createAccountPINscreen(randomPIN)
 
       //Create or Import account selection screen
       cy.createAccountSecondScreen()
 
       //Privacy Settings screen
-      cy.createAccountPrivacyToggles()
+      cy.createAccountPrivacyTogglesGoNext()
 
       //Recovery Seed Screen
       cy.createAccountRecoverySeed()
@@ -31,7 +28,7 @@ describe('Run responsiveness tests on several devices', () => {
 
       //User Image Input
       cy.createAccountAddImage(filepathCorrect)
-      cy.contains('Crop', { timeout: 20000 }).should('be.visible').click()
+      cy.contains('Crop', { timeout: 30000 }).should('be.visible').click()
 
       //Finishing Account Creation
       cy.createAccountSubmit()
@@ -39,7 +36,7 @@ describe('Run responsiveness tests on several devices', () => {
 
     it(`Import Account on ${item.description}`, () => {
       cy.viewport(item.width, item.height)
-      cy.importAccount()
+      cy.importAccount(randomPIN)
     })
 
     it(`Chat Features on ${item.description}`, () => {
@@ -47,7 +44,7 @@ describe('Run responsiveness tests on several devices', () => {
       cy.viewport(item.width, item.height)
 
       //Validate profile name displayed
-      cy.chatFeaturesProfileName('asdad')
+      cy.chatFeaturesProfileName('sadad')
 
       // Click on hamburger menu if width < height
       cy.get('.toggle-sidebar').should('be.visible').click()
@@ -61,8 +58,9 @@ describe('Run responsiveness tests on several devices', () => {
     })
 
     it(`Release Notes Screen on ${item.description}`, () => {
-      cy.viewport(item.width, item.height)
-      cy.visit('/')
+      cy.visit('/').then(() => {
+        cy.viewport(item.width, item.height)
+      })
       cy.releaseNotesScreenValidation()
     })
   })

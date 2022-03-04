@@ -1,11 +1,12 @@
+const faker = require('faker')
 const userPassphrase =
   'boring over tilt regret diamond rubber example there fire roof sheriff always'
+const randomPIN = faker.internet.password(7, false, /[A-Z]/, 'test') // generate random PIN
 
 describe('Unlock pin should be persisted when store pin is enabled', () => {
   it('Create Account with store pin disabled', () => {
     //Go to URL, add a PIN and make sure that toggle for save pin is disabled
-    cy.visit('/')
-    cy.createAccountPINscreen('test001', false)
+    cy.createAccountPINscreen(randomPIN, false, false, false)
 
     //Follow the next steps to create an account
     cy.createAccountSecondScreen()
@@ -27,8 +28,7 @@ describe('Unlock pin should be persisted when store pin is enabled', () => {
 
   it('Create Account with store pin enabled', () => {
     //Go to URL, add a PIN and make sure that toggle for save pin is enabled
-    cy.visit('/')
-    cy.createAccountPINscreen('test002', true)
+    cy.createAccountPINscreen(randomPIN, true, false, false)
 
     //Follow the next steps to create an account
     cy.createAccountSecondScreen()
@@ -52,10 +52,7 @@ describe('Unlock pin should be persisted when store pin is enabled', () => {
 
   it('Import Account with store pin disabled', () => {
     //Go to URL, add a PIN and make sure that toggle for save pin is disabled
-    cy.clearLocalStorage().then(() => {
-      cy.visit('/')
-      cy.importAccountPINscreen('test003', false)
-    })
+    cy.importAccountPINscreen(randomPIN, false, false, false)
 
     //Follow the next steps to import an account
     cy.importAccountEnterPassphrase(userPassphrase)
@@ -73,8 +70,7 @@ describe('Unlock pin should be persisted when store pin is enabled', () => {
 
   it('Import Account with store pin enabled', () => {
     //Go to URL, add a PIN and make sure that toggle for save pin is enabled
-    cy.visit('/')
-    cy.importAccountPINscreen('test004', true)
+    cy.importAccountPINscreen(randomPIN, true, false, false)
 
     //Follow the next steps to import an account
     cy.importAccountEnterPassphrase(userPassphrase)

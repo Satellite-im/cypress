@@ -1,14 +1,18 @@
+const faker = require('faker')
+const randomPIN = faker.internet.password(7, false, /[A-Z]/, 'test') // generate random PIN
+
 describe('Verify passphrase does not get stored in localstorage', () => {
   it('Passphrase in localstorage does not exist before creating account', () => {
-    cy.visit('/')
-    cy.contains('Create Account Pin').then(() => {
-      cy.validatePassphraseLocalStorage()
+    cy.visit('/').then(() => {
+      cy.contains('Create Account Pin', { timeout: 30000 }).then(() => {
+        cy.validatePassphraseLocalStorage()
+      })
     })
   })
 
   it.skip('Create Account and validate localstorage values are as expected', () => {
     // Create Account process executed
-    cy.createAccount()
+    cy.createAccount(randomPIN)
 
     //Wait until main page is loaded after creating account
     cy.get('.user-state > .is-rounded > .satellite-circle', {
@@ -22,18 +26,19 @@ describe('Verify passphrase does not get stored in localstorage', () => {
   })
 
   it('Passphrase in localstorage does not exist before importing an account', () => {
-    cy.visit('/')
-    cy.contains('Create Account Pin').then(() => {
-      cy.validatePassphraseLocalStorage()
+    cy.visit('/').then(() => {
+      cy.contains('Create Account Pin', { timeout: 30000 }).then(() => {
+        cy.validatePassphraseLocalStorage()
+      })
     })
   })
 
   it.skip('Import Account and verify passphrase is not saved in localstorage', () => {
     // Import Account process executed
-    cy.importAccount()
+    cy.importAccount(randomPIN)
 
     //Wait until main page is loaded after importing account
-    cy.contains('asdad', { timeout: 60000 }).should('be.visible')
+    cy.contains('sadad', { timeout: 60000 }).should('be.visible')
 
     // Go to URL and validate that previous passphrase is not stored in localstorage
     cy.visit('/').then(() => {
