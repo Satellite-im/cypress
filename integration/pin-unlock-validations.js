@@ -18,7 +18,9 @@ describe('Unlock pin should be persisted when store pin is enabled', () => {
     //Wait until main page is loaded after creating account
     cy.get('.user-state > .is-rounded > .satellite-circle', {
       timeout: 120000,
-    }).should('be.visible')
+    })
+      .scrollIntoView()
+      .should('be.visible')
 
     // Go to main URL again and validate that user is prompt to enter pin again
     cy.visit('/').then(() => {
@@ -40,7 +42,9 @@ describe('Unlock pin should be persisted when store pin is enabled', () => {
     //Wait until main page is loaded after creating account
     cy.get('.user-state > .is-rounded > .satellite-circle', {
       timeout: 120000,
-    }).should('be.visible')
+    })
+      .scrollIntoView()
+      .should('be.visible')
 
     // Go to main URL again and validate that user is redirected to chat screen and pin was saved
     cy.visit('/').then(() => {
@@ -60,7 +64,9 @@ describe('Unlock pin should be persisted when store pin is enabled', () => {
     //Wait until main page is loaded after importing account
     cy.get('.user-state > .is-rounded > .satellite-circle', {
       timeout: 120000,
-    }).should('be.visible')
+    })
+      .scrollIntoView()
+      .should('be.visible')
 
     // Go to main URL again and validate that user is prompt to enter pin again
     cy.visit('/').then(() => {
@@ -78,7 +84,9 @@ describe('Unlock pin should be persisted when store pin is enabled', () => {
     //Wait until main page is loaded after importing account
     cy.get('.user-state > .is-rounded > .satellite-circle', {
       timeout: 120000,
-    }).should('be.visible')
+    })
+      .scrollIntoView()
+      .should('be.visible')
 
     // Go to main URL again and validate that user is redirected to chat screen and pin was saved
     cy.visit('/').then(() => {

@@ -8,10 +8,10 @@ describe('Import Account - Negative Tests', () => {
     cy.get('[data-cy=add-passphrase]', { timeout: 30000 })
       .should('be.visible')
       .type(
-        'over tilt regret diamond rubber example there fire roof sheriff always boring',
+        'over tilt regret diamond rubber example there fire roof sheriff always boring{enter}',
         { log: false },
+        { force: true },
       )
-    cy.get('[data-cy=add-passphrase]').should('be.visible').type('{enter}')
     cy.contains('Recover Account').click()
     cy.contains(
       'We were unable to verify your passphrase. Please check it and try again.',
@@ -24,10 +24,10 @@ describe('Import Account - Negative Tests', () => {
     cy.get('[data-cy=add-passphrase]', { timeout: 30000 })
       .should('be.visible')
       .type(
-        'over tilt regret diamond rubber example there fire roof sheriff always',
+        'over tilt regret diamond rubber example there fire roof sheriff always{enter}',
         { log: false },
+        { force: true },
       )
-    cy.get('[data-cy=add-passphrase]').should('be.visible').type('{enter}')
     cy.get('.recover-account').should('be.disabled')
   })
 })

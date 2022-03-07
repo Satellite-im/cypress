@@ -6,6 +6,7 @@ const randomStatus = faker.lorem.word() // generate random status
 const randomPIN = faker.internet.password(7, false, /[A-Z]/, 'test') // generate random PIN
 
 describe('Create Account Validations', () => {
+  Cypress.on('uncaught:exception', (err, runnable) => false) // temporary until AP-48 gets fixed
   it('Create Account', () => {
     //Enter PIN screen
     cy.createAccountPINscreen(randomPIN, false, true, false)
@@ -39,7 +40,11 @@ describe('Create Account Validations', () => {
 
     //User Image Input
     cy.createAccountAddImage(filepathCorrect)
-    cy.contains('Crop', { timeout: 30000 }).should('be.visible').click()
+    cy.get('.cropper-container', { timeout: 30000 })
+      .should('be.visible')
+      .then(() => {
+        cy.contains('Crop', { timeout: 30000 }).should('be.visible').click()
+      })
 
     //Finishing Account Creation
     cy.createAccountSubmit()
@@ -66,7 +71,11 @@ describe('Create Account Validations', () => {
 
     //Now adding a non-NSFW image and validating user can pass to next step
     cy.createAccountAddImage(filepathCorrect)
-    cy.contains('Crop', { timeout: 30000 }).click()
+    cy.get('.cropper-container', { timeout: 30000 })
+      .should('be.visible')
+      .then(() => {
+        cy.contains('Crop', { timeout: 30000 }).should('be.visible').click()
+      })
     cy.get('.red').should('not.exist')
 
     //Finishing Account Creation
@@ -98,7 +107,9 @@ describe('Create Account Validations', () => {
 
     //Validating profile picture is null and default satellite circle is displayed
     cy.get('.user-state > .is-rounded > .satellite-circle', {
-      timeout: 60000,
-    }).should('exist')
+      timeout: 120000,
+    })
+      .scrollIntoView()
+      .should('exist')
   })
 })

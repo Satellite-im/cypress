@@ -17,7 +17,9 @@ describe('Verify passphrase does not get stored in localstorage', () => {
     //Wait until main page is loaded after creating account
     cy.get('.user-state > .is-rounded > .satellite-circle', {
       timeout: 120000,
-    }).should('be.visible')
+    })
+      .scrollIntoView()
+      .should('be.visible')
 
     // Go to main URL and validate that previous passphrase is not stored in localstorage
     cy.visit('/').then(() => {

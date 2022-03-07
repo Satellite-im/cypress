@@ -9,6 +9,8 @@ const randomNumber = faker.datatype.number() // generate random number
 const randomMessage = faker.lorem.sentence() // generate random sentence
 
 describe('Run responsiveness tests on several devices', () => {
+  Cypress.config('pageLoadTimeout', 180000) //adding more time for pageLoadTimeout only for this spec
+  Cypress.on('uncaught:exception', (err, runnable) => false) // to bypass Module build failed: Error: ENOENT: No such file or directory issue randomly presented
   data.allDevices.forEach((item) => {
     it(`Create Account on ${item.description}`, () => {
       cy.viewport(item.width, item.height)
@@ -28,7 +30,11 @@ describe('Run responsiveness tests on several devices', () => {
 
       //User Image Input
       cy.createAccountAddImage(filepathCorrect)
-      cy.contains('Crop', { timeout: 30000 }).should('be.visible').click()
+      cy.get('.cropper-container', { timeout: 30000 })
+        .should('be.visible')
+        .then(() => {
+          cy.contains('Crop', { timeout: 30000 }).should('be.visible').click()
+        })
 
       //Finishing Account Creation
       cy.createAccountSubmit()

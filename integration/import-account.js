@@ -22,12 +22,12 @@ describe('Import Account Validations', () => {
     ).should('be.visible')
     cy.get('[data-cy=add-passphrase]').should('be.visible')
     cy.get('[data-cy=add-passphrase]')
-      .should('not.be.disabled')
+      .should('be.visible')
       .type(
-        'boring over tilt regret diamond rubber example there fire roof sheriff always',
+        'boring over tilt regret diamond rubber example there fire roof sheriff always{enter}',
         { log: false },
+        { force: true },
       )
-    cy.get('[data-cy=add-passphrase]').should('be.visible').type('{enter}')
     cy.contains('Recover Account').should('be.visible').click()
     Cypress.on('uncaught:exception', (err, runnable) => false) // temporary until AP-48 gets fixed
   })
