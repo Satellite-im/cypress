@@ -7,6 +7,7 @@ addMatchImageSnapshotCommand()
 const faker = require('faker')
 const randomName = faker.internet.userName(name) // generate random name
 const randomStatus = faker.lorem.word() // generate random status
+const redirectedURL = 'http://localhost:3000/#/auth/unlock' // URL redirected from root
 
 const COMMAND_DELAY = 2000 // to run tests slower
 
@@ -30,16 +31,31 @@ for (const command of [
   })
 }
 
+//Command to retry visiting root page when previous PIN data is not cleared correctly
+
+Cypress.Commands.add('visitRootPage', () => {
+  cy.window().then((win) => {
+    win.sessionStorage.clear()
+  })
+  cy.visit('/')
+  cy.url().then(($url) => {
+    if (!($url === redirectedURL)) {
+      cy.clearLocalStorage()
+      cy.clearCookies()
+      cy.wait(100)
+      cy.visit('/')
+    }
+  })
+})
+
 //Create Account Commands
 
 Cypress.Commands.add('createAccount', (pin) => {
-  cy.clearCookies().then(() => {
-    cy.clearLocalStorage().then(() => {
-      cy.visit('/')
-    })
-  })
+  cy.visitRootPage()
   cy.url().should('contain', '#/auth/unlock')
-  cy.get('[data-cy=add-input]').should('be.visible').type(pin, { log: false })
+  cy.get('[data-cy=add-input]')
+    .should('be.visible')
+    .type(pin, { log: false }, { force: true })
   cy.get('[data-cy=submit-input]').click()
   cy.get('.is-primary > #custom-cursor-area').click()
   cy.get('.switch-button').each(($btn, index, $List) => {
@@ -64,16 +80,14 @@ Cypress.Commands.add('createAccount', (pin) => {
 Cypress.Commands.add(
   'createAccountPINscreen',
   (pin, savePin = false, visualValidations = false, snapshot = false) => {
-    cy.clearCookies().then(() => {
-      cy.clearLocalStorage().then(() => {
-        cy.visit('/')
-      })
-    })
+    cy.visitRootPage()
     cy.url().should('contain', '#/auth/unlock')
     if (snapshot === true) {
       cy.snapshotTestGet('.subtitle', 'Create Account Pin')
     }
-    cy.get('[data-cy=add-input]').should('be.visible').type(pin, { log: false })
+    cy.get('[data-cy=add-input]')
+      .should('be.visible')
+      .type(pin, { log: false }, { force: true })
     cy.contains('Store Pin? (Less Secure)').should('be.visible')
     if (savePin === true) {
       cy.get('.switch-button').click().should('have.class', 'enabled')
@@ -95,6 +109,7 @@ Cypress.Commands.add(
 )
 
 Cypress.Commands.add('createAccountSecondScreen', () => {
+  cy.contains('Account Creation').should('be.visible')
   cy.get('.is-primary > #custom-cursor-area').click()
 })
 
@@ -131,10 +146,12 @@ Cypress.Commands.add('createAccountPrivacyToggles', () => {
 })
 
 Cypress.Commands.add('createAccountPrivacyTogglesGoNext', () => {
+  cy.contains('Privacy Settings').should('be.visible')
   cy.get('#custom-cursor-area').click()
 })
 
 Cypress.Commands.add('createAccountRecoverySeed', () => {
+  cy.contains('Recovery Seed', { timeout: 15000 }).should('be.visible')
   cy.get('#custom-cursor-area').click()
   Cypress.on('uncaught:exception', (err, runnable) => false) // temporary until AP-48 gets fixed
 })
@@ -159,22 +176,20 @@ Cypress.Commands.add('createAccountSubmit', () => {
 //Import Account Commands
 
 Cypress.Commands.add('importAccount', (pin) => {
-  cy.clearCookies().then(() => {
-    cy.clearLocalStorage().then(() => {
-      cy.visit('/')
-    })
-  })
+  cy.visitRootPage()
   cy.url().should('contain', '#/auth/unlock')
-  cy.get('[data-cy=add-input]').should('be.visible').type(pin, { log: false })
+  cy.get('[data-cy=add-input]')
+    .should('be.visible')
+    .type(pin, { log: false }, { force: true })
   cy.get('[data-cy=submit-input]').click()
   cy.contains('Import Account', { timeout: 60000 }).click()
   cy.get('[data-cy=add-passphrase]')
     .should('be.visible')
     .type(
-      'boring over tilt regret diamond rubber example there fire roof sheriff always',
+      'boring over tilt regret diamond rubber example there fire roof sheriff always{enter}',
       { log: false },
+      { force: true },
     )
-  cy.get('[data-cy=add-passphrase]').type('{enter}')
   cy.contains('Recover Account').click()
   Cypress.on('uncaught:exception', (err, runnable) => false) // temporary until AP-48 gets fixed
 })
@@ -182,16 +197,14 @@ Cypress.Commands.add('importAccount', (pin) => {
 Cypress.Commands.add(
   'importAccountPINscreen',
   (pin, savePin = false, visualValidations = false, snapshot = false) => {
-    cy.clearCookies().then(() => {
-      cy.clearLocalStorage().then(() => {
-        cy.visit('/')
-      })
-    })
+    cy.visitRootPage()
     cy.url().should('contain', '#/auth/unlock')
     if (snapshot === true) {
       cy.snapshotTestGet('.subtitle', 'Create Account Pin')
     }
-    cy.get('[data-cy=add-input]').should('be.visible').type(pin, { log: false })
+    cy.get('[data-cy=add-input]')
+      .should('be.visible')
+      .type(pin, { log: false }, { force: true })
     if (visualValidations === true) {
       cy.contains('Create Account Pin').should('be.visible')
       cy.contains(
@@ -215,8 +228,9 @@ Cypress.Commands.add('importAccountEnterPassphrase', (userPassphrase) => {
   cy.contains('Import Account', { timeout: 60000 }).click()
   cy.get('[data-cy=add-passphrase]')
     .should('be.visible')
-    .type(userPassphrase, { log: false })
+    .type(userPassphrase, { log: false }, { force: true })
   cy.get('[data-cy=add-passphrase]').type('{enter}')
+
   cy.contains('Recover Account').click()
   Cypress.on('uncaught:exception', (err, runnable) => false) // temporary until AP-48 gets fixed
 })
@@ -224,7 +238,7 @@ Cypress.Commands.add('importAccountEnterPassphrase', (userPassphrase) => {
 //Chat Features Commands
 
 Cypress.Commands.add('chatFeaturesProfileName', (value) => {
-  cy.contains(value, { timeout: 120000 }).should('be.visible')
+  cy.contains(value, { timeout: 180000 }).should('be.visible')
   cy.contains(value).click() // clicks on user name
 })
 
@@ -238,10 +252,7 @@ Cypress.Commands.add('chatFeaturesSendEmoji', (emojiLocator, emojiValue) => {
   cy.get('#emoji-toggle > .control-icon').click()
   cy.get(emojiLocator).click() // sending emoji
   cy.get('.messageuser').click()
-  cy.get('.messageuser')
-    .should('not.be.disabled')
-    .should('be.visible')
-    .type('{enter}')
+  cy.get('.messageuser').type('{enter}')
   cy.contains(emojiValue)
 })
 
@@ -250,7 +261,6 @@ Cypress.Commands.add(
   (messageToEdit, messageEdited) => {
     cy.contains(messageToEdit).rightclick()
     cy.contains('Edit Message').click()
-    cy.get('.edit-message-body-input').click()
     cy.get('.edit-message-body-input').should('be.visible').type(messageEdited) // editing message
     cy.get('.edit-message-body-input').type('{enter}')
     cy.contains(messageEdited)

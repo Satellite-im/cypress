@@ -8,6 +8,7 @@ let toggleStatusSaved = []
 let toggleStatusProfile = []
 
 describe('Privacy Page Toggles Tests', () => {
+  Cypress.on('uncaught:exception', (err, runnable) => false) // to bypass Module build failed: Error: ENOENT: No such file or directory issue randomly presented
   before(() => {
     //Adding pin to continue to toggles switches screen
     cy.createAccountPINscreen(randomPIN)
@@ -65,7 +66,9 @@ describe('Privacy Page Toggles Tests', () => {
     cy.createAccountSubmit()
     cy.get('.user-state > .is-rounded > .satellite-circle', {
       timeout: 120000,
-    }).should('be.visible')
+    })
+      .scrollIntoView()
+      .should('be.visible')
   })
 
   it('Profile - Verify the toggles user added when signing up are on the same status when user goes to settings', () => {
