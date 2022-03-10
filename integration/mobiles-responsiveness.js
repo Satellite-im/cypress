@@ -7,6 +7,8 @@ const randomStatus = faker.lorem.word() // generate random status
 const filepathCorrect = 'images/logo.png'
 const randomNumber = faker.datatype.number() // generate random number
 const randomMessage = faker.lorem.sentence() // generate random sentence
+const recoverySeed =
+  'boring over tilt regret diamond rubber example there fire roof sheriff always{enter}'
 
 describe('Run responsiveness tests on several devices', () => {
   Cypress.config('pageLoadTimeout', 180000) //adding more time for pageLoadTimeout only for this spec
@@ -42,7 +44,7 @@ describe('Run responsiveness tests on several devices', () => {
 
     it(`Import Account on ${item.description}`, () => {
       cy.viewport(item.width, item.height)
-      cy.importAccount(randomPIN)
+      cy.importAccount(randomPIN, recoverySeed)
     })
 
     it(`Chat Features on ${item.description}`, () => {
