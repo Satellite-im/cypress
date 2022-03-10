@@ -1,5 +1,7 @@
 const faker = require('faker')
 const randomPIN = faker.internet.password(7, false, /[A-Z]/, 'test') // generate random PIN
+const recoverySeed =
+  'boring over tilt regret diamond rubber example there fire roof sheriff always{enter}'
 
 describe('Verify passphrase does not get stored in localstorage', () => {
   it('Passphrase in localstorage does not exist before creating account', () => {
@@ -37,7 +39,7 @@ describe('Verify passphrase does not get stored in localstorage', () => {
 
   it.skip('Import Account and verify passphrase is not saved in localstorage', () => {
     // Import Account process executed
-    cy.importAccount(randomPIN)
+    cy.importAccount(randomPIN, recoverySeed)
 
     //Wait until main page is loaded after importing account
     cy.contains('sadad', { timeout: 60000 }).should('be.visible')

@@ -2,11 +2,13 @@ const faker = require('faker')
 const randomPIN = faker.internet.password(7, false, /[A-Z]/, 'test') // generate random PIN
 const randomNumber = faker.datatype.number() // generate random number
 const randomMessage = faker.lorem.sentence() // generate random sentence
+const recoverySeed =
+  'boring over tilt regret diamond rubber example there fire roof sheriff always{enter}'
 
 describe('Chat Features Tests', () => {
   it('Chat - Send stuff on chat', () => {
     //Import account
-    cy.importAccount(randomPIN)
+    cy.importAccount(randomPIN, recoverySeed)
 
     //Validate profile name displayed
     cy.chatFeaturesProfileName('sadad')

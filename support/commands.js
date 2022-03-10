@@ -175,7 +175,7 @@ Cypress.Commands.add('createAccountSubmit', () => {
 
 //Import Account Commands
 
-Cypress.Commands.add('importAccount', (pin) => {
+Cypress.Commands.add('importAccount', (pin, recoverySeed) => {
   cy.visitRootPage()
   cy.url().should('contain', '#/auth/unlock')
   cy.get('[data-cy=add-input]')
@@ -185,11 +185,7 @@ Cypress.Commands.add('importAccount', (pin) => {
   cy.contains('Import Account', { timeout: 60000 }).click()
   cy.get('[data-cy=add-passphrase]')
     .should('be.visible')
-    .type(
-      'boring over tilt regret diamond rubber example there fire roof sheriff always{enter}',
-      { log: false },
-      { force: true },
-    )
+    .type(recoverySeed, { log: false }, { force: true })
   cy.contains('Recover Account').click()
   Cypress.on('uncaught:exception', (err, runnable) => false) // temporary until AP-48 gets fixed
 })
@@ -266,6 +262,36 @@ Cypress.Commands.add(
     cy.contains(messageEdited)
   },
 )
+
+Cypress.Commands.add('chatFeaturesSendGlyph', () => {
+  cy.get('#glyph-toggle').click()
+  cy.get('.pack-list > .is-text').should('contain', 'Try using some glyphs')
+  cy.get('.glyph-item').first().click()
+  cy.get('.messageuser').click().type('{enter}')
+})
+
+Cypress.Commands.add('chatFeaturesSendImage', (imagePath) => {
+  cy.get('#quick-upload').selectFile(imagePath, {
+    force: true,
+  })
+  cy.get('.file-item').should('be.visible')
+  cy.get('.file-info > .title').should('contain', 'logo.png')
+  cy.contains('Scanning', { timeout: 120000 }).should('not.exist')
+  cy.get('.thumbnail').should('be.visible')
+  cy.get('.messageuser').type('{enter}')
+  cy.get('.thumbnail', { timeout: 120000 }).should('not.exist')
+})
+
+Cypress.Commands.add('chatFeaturesSendFile', (filePath) => {
+  cy.get('#quick-upload').selectFile(filePath, {
+    force: true,
+  })
+  cy.get('.file-item').should('be.visible')
+  cy.get('.file-info > .title').should('contain', 'test-file.txt')
+  cy.get('.preview', { timeout: 120000 }).should('exist')
+  cy.get('.messageuser').type('{enter}')
+  cy.get('.preview', { timeout: 120000 }).should('not.exist')
+})
 
 //Version Release Notes Commands
 
